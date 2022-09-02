@@ -26,6 +26,10 @@ Ensure you enable CPU guest Virtualistaion if this build is to be run as a virtu
 Note: You will need to install docker manually.
  
 ### misc
+
+##### May need to download Visual Studio manually
+Currently broken, - Need to fix.
+
 ##### Error compiling in Visual Studio - Missing source packages
 Compiling some projects error as there is a missing package, fix for the ones I've come across (grand total of 1!) is to update the nuget package sources with below:
 
