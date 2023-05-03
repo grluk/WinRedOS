@@ -13,7 +13,7 @@ Add-MpPreference -ExclusionPath "C:\payloads\"
 $Downloads = Get-ItemPropertyValue 'HKCU:\software\microsoft\windows\currentversion\explorer\shell folders\' -Name '{374DE290-123F-4565-9164-39C4925E467B}'
 Add-MpPreference -ExclusionPath $Downloads
 Set-MpPreference -MAPSReporting Disabled
-Set-MpPreference -SubmitSamplesConsent NeverSend
+Set-MpPreference -SubmitSamplesConsent Never
 
 #~~~~~~ Main Choco packages install ~~~~~
 choco feature enable -n allowGlobalConfirmation
@@ -41,6 +41,9 @@ foreach($pkg in $ChocoPackages){
 choco install sysinternals --params "/InstallDir:C:\tools\sysinternals" --cacheLocation C:\Temp
 choco install googlechrome --ignore-checksums --cacheLocation C:\Temp
 choco install heidisql --version=10.2.0.559900 --cacheLocation C:\Temp
+choco install microsoft-windows-terminal --cacheLocation C:\Temp
+choco install processhacker --cacheLocation C:\Temp
+choco install windbg --cacheLocation C:\Temp
 
 #Work around for nested chocolatey issue, reset some things.
 $env:TEMP = "C:\Temp"
@@ -100,41 +103,24 @@ $env:TEMP = "C:\Temp"
 $env:TMP = "C:\Temp"
 
 # BloodHound
-Invoke-WebRequest -Uri 'https://github.com/BloodHoundAD/BloodHound/releases/download/4.0.3/BloodHound-win32-x64.zip' -OutFile "$env:TEMP\BloodHound.zip"
+Invoke-WebRequest -Uri 'https://github.com/BloodHoundAD/BloodHound/releases/download/4.2.0/BloodHound-darwin-x64.zip' -OutFile "$env:TEMP\BloodHound.zip"
 Expand-Archive -Path "$env:TEMP\BloodHound.zip" -DestinationPath C:\tools\
 Rename-Item -Path C:\tools\BloodHound-win32-x64\ -NewName BloodHound
 Invoke-WebRequest -Uri 'https://neo4j.com/artifact.php?name=neo4j-community-4.0.0-windows.zip' -OutFile "$env:TEMP\neo4j.zip"
 Expand-Archive -Path "$env:TEMP\neo4j.zip" -DestinationPath C:\tools\
 Rename-Item -Path C:\tools\neo4j-community-4.0.0\ -NewName Neo4j
 
-#Foca (Needs testing)
-Invoke-WebRequest -Uri 'https://github.com/ElevenPaths/FOCA/releases/download/v3.4.7.1/FOCA-v3.4.7.1.zip' -OutFile "$env:TEMP\Foca.zip"
-Expand-Archive -Path "$env:TEMP\foca.zip" -DestinationPath C:\tools\
 
-
-## Visual Studio
-#$html = (New-Object Net.WebClient).DownloadString('https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16')
-#$url = [regex]::Match($html, '(https).*(vs_Community.exe)').Captures.Groups[0].Value
-#Invoke-WebRequest -Uri $url -OutFile "$Downloads\vs_Community.exe"
-#Start-Process -FilePath "$env:TEMP\vs_Community.exe" -ArgumentList "--add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --Passive" -Wait
-#Invoke-WebRequest -Uri 'https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage' -OutFile "$Downloads\InstallerProjects.vsix"
-##Start-Process -FilePath "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\VSIXInstaller.exe" -ArgumentList "/q $env:TEMP\InstallerProjects.vsix" -Wait
-Invoke-WebRequest -Uri 'https://download.microsoft.com/download/E/E/D/EEDF18A8-4AED-4CE0-BEBE-70A83094FC5A/BuildTools_Full.exe' -OutFile "$Downloads\BuildTools.exe"
-Start-Process -FilePath "$env:TEMP\BuildTools.exe" -ArgumentList "/Passive" -Wait
-Enable-WindowsOptionalFeature -FeatureName NetFx3 -Online
-
-
-#Invoke-WebRequest -Uri 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi' -OutFile "c:\Temp\wsl_update_x64.msi"
-#Start-process "c:\Temp\wsl_update_x64.msi /quiet"
-
+#Install WSL (win11 Only)
+#wsl --install
 
 # GPRegistryPolicy
 Install-Module GPRegistryPolicy -Force
 
-# Enable PSRemoting
-# Enable-PSRemoting -Force
+#Enable PSRemoting
+#Enable-PSRemoting -Force
 # The below does enable all hosts as trusted not for production use yada yada yada...
-# Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
+#Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
 
 # UI
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyInstaller.psm1" -Force
@@ -144,8 +130,8 @@ Install-ChocolateyShortcut -shortcutFilePath "C:\Users\Public\Desktop\Neo4j.lnk"
 
 # Wallpaper
 #New-Item -Path C:\ -Name DTop -ItemType Directory -ErrorAction SilentlyContinue
-#Invoke-WebRequest -Uri 'https://i.imgur.com/DCwQDYu.jpg' -OutFile "C:\DTop\wallpaper.jpg"
-#set-itemproperty -path "HKCU:Control Panel\Desktop" -name WallPaper -value C:\DTop\wallpaper.jpg
+#Invoke-WebRequest -Uri 'https://w.wallhaven.cc/full/o3/wallhaven-o3dw85.png' -OutFile "C:\DTop\wallpaper.png"
+#set-itemproperty -path "HKCU:Control Panel\Desktop" -name WallPaper -value C:\DTop\wallpaper.png
 
 #Docker setup
 #Invoke-WebRequest -Uri 'https://desktop.docker.com/win/stable/amd64/Docker%20Desktop%20Installer.exe' -OutFile "c:\Temp\Docker-Desktop.exe"
