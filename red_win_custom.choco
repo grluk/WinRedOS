@@ -93,8 +93,9 @@ git clone https://github.com/Kevin-Robertson/Sharpmad C:\tools\SharpMad
 git clone https://github.com/GhostPack/Rubeus C:\tools\Rubeus
 
 #Optional Items
-# git clone https://github.com/insidetrust/statistically-likely-usernames.git C:\tools\Stat-Users
-# Invoke-WebRequest -Uri  'https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_amd64.exe' -Outfile "C:\tools\kerbrute\kerbrute_windows_amd64.exe"
+git clone https://github.com/insidetrust/statistically-likely-usernames.git C:\tools\Stat-Users
+mkdir c:\tools\kerbrute
+Invoke-WebRequest -Uri  'https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_amd64.exe' -Outfile "C:\tools\kerbrute\kerbrute_windows_amd64.exe"
 
 
 # IE first run
